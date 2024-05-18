@@ -1,6 +1,9 @@
 import pygame as pg
 import sys
 from settings import *
+from map import *
+from player import *
+
 class Game:
 
     def __init__(self): #al iniciar un game
@@ -9,10 +12,13 @@ class Game:
         self.clock= pg.time.Clock()
         self.delta_time=1
         self.new_game()
+
     def new_game(self):
         self.player=Player(self)
+        self.map=Map(self) # type: ignore
 
     def update(self): #llamado cada frame
+        self.player.update()
         pg.display.flip()
         self.clock.tick(FPS)
         pg.display.set_caption(f'{self.clock.get_fps() :.1f}') #actualiza el nombre de la ventana según los fps actuales
@@ -20,7 +26,7 @@ class Game:
     def draw(self): #dibuja la pantalla
         self.screen.fill('black')
         self.player.draw()
-
+        self.map.draw()
     def checkEvents(self): #chequea si sales de la ventana para cerrar el programa
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type== pg.KEYDOWN and event.key == pg.K_ESCAPE):
