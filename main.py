@@ -3,6 +3,7 @@ import sys
 from settings import *
 from map import *
 from player import *
+from raycasting import *
 
 class Game:
 
@@ -15,10 +16,12 @@ class Game:
 
     def new_game(self):
         self.player=Player(self)
-        self.map=Map(self) # type: ignore
+        self.map=Map(self)
+        self.rayCasting= RayCasting(self)
 
     def update(self): #llamado cada frame
         self.player.update()
+        self.rayCasting.update()
         pg.display.flip()
         self.clock.tick(FPS)
         pg.display.set_caption(f'{self.clock.get_fps() :.1f}') #actualiza el nombre de la ventana según los fps actuales
