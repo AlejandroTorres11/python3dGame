@@ -7,55 +7,55 @@ class RayCasting:
         self.game= game
     
     def rayCast(self):
-        ox,oy= self.game.player.pos
-        xMap,yMap= self.game.player.mapPos
+        ox,oy= self.game.player.position
+        xMap,yMap= self.game.player.mapPosition
         rayAngle= self.game.player.angle - HALF_FOV +0.0001
         for ray in range(NUM_RAYS):
             sinA=math.sin(rayAngle)
             cosA=math.cos(rayAngle)
             #lineas horizontales de la casilla
             if sinA>0: #miramos arriba
-                yHor,dy=(yMap +1,1)
+                yHorizontal,dy=(yMap +1,1)
             else:
-               yHor,dy=(yMap-0.000001,-1)
-            depthHor=(yHor-oy)/sinA      
-            xHor=ox + cosA*depthHor
+               yHorizontal,dy=(yMap-0.000001,-1)
+            depthHorizontal=(yHorizontal-oy)/sinA      
+            xHorizontal=ox + cosA*depthHorizontal
 
             deltaDepth=dy/sinA
             dx=deltaDepth * cosA
 
             for i in range(MAX_DEPTH):
-                tileHor=int(xHor),int(yHor)
-                if tileHor in self.game.map.worldMap:
+                tileHorizontal=int(xHorizontal),int(yHorizontal)
+                if tileHorizontal in self.game.map.worldMap:
                     break
-                xHor+=dx
-                yHor+=dy
-                depthHor+= deltaDepth
+                xHorizontal+=dx
+                yHorizontal+=dy
+                depthHorizontal+= deltaDepth
 
             #lineas verticales de la casilla
             
             if cosA>0: #significa que miramos a derecha
-                xVert,dx=(xMap+1,1)
+                xVertical,dx=(xMap+1,1)
             else: #si miramos a izquierda
-                xVert,dx=(xMap-0.000001,-1)
+                xVertical,dx=(xMap-0.000001,-1)
 
-            depthVert=(xVert -ox)/cosA #trigonometria para conocer la hipotenusa
-            yVert=oy + sinA* depthVert #al conocer la hipotenusa y elseno del angulo podemos calcular la posicion del rayo en y
+            depthVertical=(xVertical -ox)/cosA #trigonometria para conocer la hipotenusa
+            yVertical=oy + sinA* depthVertical #al conocer la hipotenusa y elseno del angulo podemos calcular la posicion del rayo en y
             deltaDepth= dx/cosA  #deltaDepth es la distancia al siguiente cuadrante
             dy= deltaDepth * sinA
             for i in range(MAX_DEPTH):
-                tileVert= int(xVert),int(yVert)
-                if tileVert in self.game.map.worldMap:
+                tileVertical= int(xVertical),int(yVertical)
+                if tileVertical in self.game.map.worldMap:
                     break
-                xVert+=dx
-                yVert+=dy       
-                depthVert+= deltaDepth
+                xVertical+=dx
+                yVertical+=dy       
+                depthVertical+= deltaDepth
             
             #depth
-            if(depthHor>depthVert):
-                depth=depthVert
+            if(depthHorizontal>depthVertical):
+                depth=depthVertical
             else:
-                depth=depthHor
+                depth=depthHorizontal
 
             pg.draw.line(self.game.screen,'yellow',(ox*100,oy*100), (100*ox+100*depth*cosA,100*oy +100*depth*sinA),2)
             rayAngle+=DELTA_ANGLE

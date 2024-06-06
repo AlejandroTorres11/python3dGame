@@ -24,7 +24,7 @@ class Game:
         self.rayCasting.update()
         pg.display.flip()
         self.delta_time=self.clock.tick(FPS)
-        print(self.delta_time)
+        #print(self.delta_time)
         pg.display.set_caption(f'{self.clock.get_fps() :.1f}') #actualiza el nombre de la ventana según los fps actuales
 
     def draw(self): #dibuja la pantalla

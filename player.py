@@ -16,26 +16,26 @@ class Player:
         pg.draw.circle(self.game.screen, 'green', (int(self.x * 100), int(self.y * 100)), 15)
     
     def movement(self):
-        sin_a = math.sin(self.angle)
-        cos_a = math.cos(self.angle)
-        dx, dy = 0, 0
+        sinA = math.sin(self.angle)
+        cosA = math.cos(self.angle)
+        dx, dy = 0, 0   #diferencia x
         speed = PLAYER_SPEED * self.game.delta_time
-        speed_sin = speed * sin_a
-        speed_cos = speed * cos_a
+        speedSin = speed * sinA
+        speedCos = speed * cosA
 
         key = pg.key.get_pressed()
         if key[pg.K_w]:
-            dx += speed_cos
-            dy += speed_sin
+            dx += speedCos
+            dy += speedSin
         if key[pg.K_s]:
-            dx += -speed_cos
-            dy += -speed_sin
+            dx += -speedCos
+            dy += -speedSin
         if key[pg.K_a]:
-            dx += speed_sin
-            dy += -speed_cos
+            dx += speedSin
+            dy += -speedCos
         if key[pg.K_d]:
-            dx += -speed_sin
-            dy += speed_cos
+            dx += -speedSin
+            dy += speedCos
         
         self.checkWallCollision(dx, dy)
         
@@ -55,9 +55,9 @@ class Player:
             self.y += dy
 
     @property
-    def pos(self):  # saber coordenadas exactas del jugador
+    def position(self):  # saber coordenadas exactas del jugador
         return self.x, self.y
     
     @property
-    def mapPos(self):  # saber en qué casilla está el jugador
+    def mapPosition(self):  # saber en qué casilla está el jugador
         return int(self.x), int(self.y)
