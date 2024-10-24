@@ -29,8 +29,11 @@ class Game:
 
     def draw(self): #dibuja la pantalla
         self.screen.fill('black')
+        
+        '''
         self.player.draw()
         self.map.draw()
+        '''
     def checkEvents(self): #chequea si sales de la ventana para cerrar el programa
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type== pg.KEYDOWN and event.key == pg.K_ESCAPE):
