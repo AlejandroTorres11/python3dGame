@@ -26,7 +26,7 @@ class SpriteRenderer:
     
     def loadWallTextures(self):
         return {
-            1: self.getTexture('assets/wall1.png'),
-            2: self.getTexture('assets/wall2.png'),
-            3: self.getTexture('assets/wall3.png'),
+            1: self.getTexture('assets/wall/wall1.png'),
+            2: self.getTexture('assets/wall/wall2.png'),
+            3: self.getTexture('assets/wall/wall3.png'),
         }
