@@ -18,7 +18,7 @@ PLAYER_SIZE_SCALE=60
 #ray cast
 FOV = math.pi/3  #equivale a 60°
 HALF_FOV= FOV/2
-NUM_RAYS=250
+NUM_RAYS= WIDTH // 2
 MAX_DEPTH= 800  #longitud maxima de un rayo
 DELTA_ANGLE= FOV/NUM_RAYS #diferencia de grados entre rayos
 

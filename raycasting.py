@@ -8,23 +8,26 @@ class RayCasting:
         self.rayCastingResult= []
         self.objectsToRender=[]
         self.textures= self.game.spriteRenderer.wallTextures
+
     def getSpritesToRender(self):
         self.objectsToRender.clear()
         for ray, values in enumerate(self.rayCastingResult):
-            depth, projHeight, texture, offset= values
-            if projHeight<HEIGHT:
-                wallColumn= self.textures[texture].subsurface(offset*(TEXTURE_WIDTH - SCALE),0,SCALE,TEXTURE_WIDTH)
-                wallColumn= pg.transform.scale(wallColumn,(SCALE,projHeight))
-                wallPos= (ray*SCALE, HALF_HEIGHT - projHeight//2)
+            depth, projHeight, texture, offset = values
+            if projHeight < HEIGHT:
+                wallColumn = self.textures[texture].subsurface(offset * (TEXTURE_WIDTH - SCALE), 0, SCALE, TEXTURE_WIDTH)
+                wallColumn = pg.transform.scale(wallColumn, (SCALE, projHeight))
+                wallPos = (ray * SCALE, HALF_HEIGHT - projHeight // 2)
             else:
-                textureHeight= TEXTURE_WIDTH * HEIGHT/projHeight
-                wallColumn= self.textures[texture].subsurface(offset*(TEXTURE_WIDTH - SCALE),HALF_TEXTURE_WIDTH-textureHeight//2,SCALE,textureHeight)
-                wallColumn= pg.transform.scale(wallColumn,(SCALE,HEIGHT))
-                wallPos= (ray*SCALE,0)
-                
-            self.objectsToRender.append((depth,wallColumn,wallPos))
+                textureHeight = TEXTURE_WIDTH * HEIGHT / projHeight
+                wallColumn = self.textures[texture].subsurface(offset * (TEXTURE_WIDTH - SCALE), HALF_TEXTURE_WIDTH - textureHeight // 2, SCALE, textureHeight)
+                wallColumn = pg.transform.scale(wallColumn, (SCALE, HEIGHT))
+                wallPos = (ray * SCALE, 0)
+
+            self.objectsToRender.append((depth, wallColumn, wallPos))
+
     def rayCast(self):
         self.rayCastingResult.clear()
+        textureHor,textureVer=1,1
         ox,oy= self.game.player.position
         xMap,yMap= self.game.player.mapPosition
         rayAngle= self.game.player.angle - HALF_FOV +0.0001
