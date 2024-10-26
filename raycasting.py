@@ -5,8 +5,26 @@ from settings import *
 class RayCasting:
     def __init__(self,game):
         self.game= game
-    
+        self.rayCastingResult= []
+        self.objectsToRender=[]
+        self.textures= self.game.spriteRenderer.wallTextures
+    def getSpritesToRender(self):
+        self.objectsToRender.clear()
+        for ray, values in enumerate(self.rayCastingResult):
+            depth, projHeight, texture, offset= values
+            if projHeight<HEIGHT:
+                wallColumn= self.textures[texture].subsurface(offset*(TEXTURE_WIDTH - SCALE),0,SCALE,TEXTURE_WIDTH)
+                wallColumn= pg.transform.scale(wallColumn,(SCALE,projHeight))
+                wallPos= (ray*SCALE, HALF_HEIGHT - projHeight//2)
+            else:
+                textureHeight= TEXTURE_WIDTH * HEIGHT/projHeight
+                wallColumn= self.textures[texture].subsurface(offset*(TEXTURE_WIDTH - SCALE),HALF_TEXTURE_WIDTH-textureHeight//2,SCALE,textureHeight)
+                wallColumn= pg.transform.scale(wallColumn,(SCALE,HEIGHT))
+                wallPos= (ray*SCALE,0)
+                
+            self.objectsToRender.append((depth,wallColumn,wallPos))
     def rayCast(self):
+        self.rayCastingResult.clear()
         ox,oy= self.game.player.position
         xMap,yMap= self.game.player.mapPosition
         rayAngle= self.game.player.angle - HALF_FOV +0.0001
@@ -27,6 +45,7 @@ class RayCasting:
             for i in range(MAX_DEPTH):
                 tileHorizontal=int(xHorizontal),int(yHorizontal)
                 if tileHorizontal in self.game.map.worldMap:
+                    textureHor= self.game.map.worldMap[tileHorizontal]
                     break
                 xHorizontal+=dx
                 yHorizontal+=dy
@@ -46,32 +65,43 @@ class RayCasting:
             for i in range(MAX_DEPTH):
                 tileVertical= int(xVertical),int(yVertical)
                 if tileVertical in self.game.map.worldMap:
+                    textureVer= self.game.map.worldMap[tileVertical]
                     break
                 xVertical+=dx
                 yVertical+=dy       
                 depthVertical+= deltaDepth
             
-            #depth
+            #depth, distancia al muro
             if(depthHorizontal>depthVertical):
-                depth=depthVertical
+                depth,texture=depthVertical, textureVer
+                yVertical%=1
+                offset= yVertical if cosA>0 else 1-yVertical
             else:
-                depth=depthHorizontal
+                depth, texture=depthHorizontal, textureHor
+                xHorizontal%=1
+                offset= xHorizontal if sinA<0 else (1-xHorizontal)
 
-            #remove fishbowl effect
-            depth*=math.cos(self.game.player.angle - rayAngle)
+            #quitar efecto de ojo de pez
+            depth*=math.cos(self.game.player.angle - rayAngle) #cuanto mas se aleja el rayo del centro, menor es el coseno de la diferencia 
+                                                                #y menor el depth para compensar
 
-            #projection
-            proj_height= SCREEN_DIST/ (depth + 0.0001)
+            #projeccion
+            projHeight= SCREEN_DIST/ (depth + 0.0001) #altura de la proyeccion de la pared
 
-            #draw walls
-            color=[255/(1+depth **5 * 0.00002)]*3
+            #resultado raycasting
+            self.rayCastingResult.append((depth,projHeight,texture,offset))
+            #dibujar paredes blancas
+            ''' 
+            color=((255/(1+depth **5 * 0.00002)),) * 3
             pg.draw.rect(self.game.screen, color,
-                        (ray*SCALE,HALF_HEIGHT - proj_height//2, SCALE, proj_height))
-            #minimap
+                        (ray*SCALE,HALF_HEIGHT - projHeight//2, SCALE, projHeight))
             '''
+            '''
+            #minimapa
             pg.draw.line(self.game.screen,'yellow',(ox*100,oy*100), (100*ox+100*depth*cosA,100*oy +100*depth*sinA),2)
 
             '''
             rayAngle+=DELTA_ANGLE
     def update(self):
         self.rayCast()
+        self.getSpritesToRender()

@@ -4,7 +4,7 @@ from settings import *
 from map import *
 from player import *
 from raycasting import *
-
+from spriteRenderer import *
 class Game:
 
     def __init__(self): #al iniciar un game
@@ -17,6 +17,7 @@ class Game:
     def new_game(self):
         self.player=Player(self)
         self.map=Map(self)
+        self.spriteRenderer=SpriteRenderer(self)
         self.rayCasting= RayCasting(self)
 
     def update(self): #llamado cada frame
@@ -29,7 +30,7 @@ class Game:
 
     def draw(self): #dibuja la pantalla
         self.screen.fill('black')
-        
+        self.spriteRenderer.draw()
         '''
         self.player.draw()
         self.map.draw()

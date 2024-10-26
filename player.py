@@ -49,9 +49,10 @@ class Player:
         return (x, y) not in self.game.map.worldMap  # chequea si las coordenadas están en las paredes
 
     def checkWallCollision(self, dx, dy):
-        if self.checkWall(int(self.x + dx), int(self.y)):  # se anticipa al movimiento en x
+        scale=PLAYER_SIZE_SCALE/self.game.delta_time
+        if self.checkWall(int(self.x + dx * scale), int(self.y)):  # se anticipa al movimiento en x
             self.x += dx
-        if self.checkWall(int(self.x), int(self.y + dy)):  # se anticipa al movimiento en y
+        if self.checkWall(int(self.x), int(self.y + dy* scale)):  # se anticipa al movimiento en y
             self.y += dy
 
     @property
