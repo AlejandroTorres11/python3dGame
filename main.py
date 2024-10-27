@@ -29,7 +29,7 @@ class Game:
         pg.display.set_caption(f'{self.clock.get_fps() :.1f}') #actualiza el nombre de la ventana según los fps actuales
 
     def draw(self): #dibuja la pantalla
-        self.screen.fill('black')
+        #self.screen.fill('black')
         self.spriteRenderer.draw()
         '''
         self.player.draw()
