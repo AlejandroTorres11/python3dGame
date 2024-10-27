@@ -8,13 +8,14 @@ class SpriteRenderer:
         self.wallTextures = self.loadWallTextures()
         self.skyImage = self.getTexture('assets/sky/sky.png', (WIDTH, HEIGHT // 2)) 
         self.skyOffSet=0;
+        self.floorImage= self.getTexture('assets/floor/grass1.png', (WIDTH, HEIGHT // 2))
     def draw(self):
         self.drawBackground()
         self.renderGameSprites()
     def drawBackground(self):
-        self.skyOffSet=(self.skyOffSet+0.4 *self.game.player.angle)%WIDTH
+        self.skyOffSet=(self.skyOffSet+0.5 *self.game.player.angle)%HALF_WIDTH
         self.screen.blit(self.skyImage,(-self.skyOffSet,0))
-        self.screen.blit(self.skyImage,(WIDTH-self.skyOffSet,0))
+        self.screen.blit(self.skyImage,(-self.skyOffSet+WIDTH,0))
 
         pg.draw.rect(self.screen, FLOOR_COLOR, (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT))
 

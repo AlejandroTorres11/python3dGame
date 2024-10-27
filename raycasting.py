@@ -10,7 +10,7 @@ class RayCasting:
         self.textures= self.game.spriteRenderer.wallTextures
 
     def getSpritesToRender(self):
-        self.objectsToRender.clear()
+        self.objectsToRender=[]
         for ray, values in enumerate(self.rayCastingResult):
             depth, projHeight, texture, offset = values
             if projHeight < HEIGHT:
@@ -26,7 +26,7 @@ class RayCasting:
             self.objectsToRender.append((depth, wallColumn, wallPos))
 
     def rayCast(self):
-        self.rayCastingResult.clear()
+        self.rayCastingResult=[]
         textureHor,textureVer=1,1
         ox,oy= self.game.player.position
         xMap,yMap= self.game.player.mapPosition
