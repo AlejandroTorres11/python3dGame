@@ -27,7 +27,6 @@ class RayCasting:
 
     def rayCast(self):
         self.rayCastingResult.clear()
-        wallHeight= 0
         textureHor,textureVer=1,1
         ox,oy= self.game.player.position
         xMap,yMap= self.game.player.mapPosition
@@ -50,7 +49,6 @@ class RayCasting:
                 tileHorizontal=int(xHorizontal),int(yHorizontal)
                 if tileHorizontal in self.game.map.worldMap:
                     textureHor= self.game.map.worldMap[tileHorizontal]
-                    
                     break
                 xHorizontal+=dx
                 yHorizontal+=dy
@@ -91,7 +89,7 @@ class RayCasting:
                                                                 #y menor el depth para compensar
 
             #projeccion
-            projHeight= SCREEN_DIST*wallHeight/ (depth + 0.0001) #altura de la proyeccion de la pared
+            projHeight= SCREEN_DIST/ (depth + 0.0001) #altura de la proyeccion de la pared
 
             #resultado raycasting
             self.rayCastingResult.append((depth,projHeight,texture,offset))
