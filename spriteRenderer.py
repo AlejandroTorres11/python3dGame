@@ -6,17 +6,30 @@ class SpriteRenderer:
         self.game = game
         self.screen = game.screen
         self.wallTextures = self.loadWallTextures()
+        #sky
         self.skyImage = self.getTexture('assets/sky/sky.png', (WIDTH, HEIGHT // 2)) 
         self.skyOffSet=0;
+<<<<<<< HEAD
         self.floorImage= self.getTexture('assets/floor/grass1.png', (WIDTH, HEIGHT // 2))
+=======
+        
+
+>>>>>>> bfac7102f308fb143210f4ac2fd8d45208f7aaf0
     def draw(self):
         self.drawBackground()
         self.renderGameSprites()
+
     def drawBackground(self):
+<<<<<<< HEAD
         self.skyOffSet=(self.skyOffSet+0.5 *self.game.player.angle)%HALF_WIDTH
         self.screen.blit(self.skyImage,(-self.skyOffSet,0))
         self.screen.blit(self.skyImage,(-self.skyOffSet+WIDTH,0))
         pg.draw.rect(self.screen, ROOF_COLOR, (0, 0, WIDTH, HALF_HEIGHT))
+=======
+        self.skyOffSet=(self.skyOffSet+400 *self.game.player.angleDelta)%WIDTH
+        self.screen.blit(self.skyImage,(-self.skyOffSet,0))
+        self.screen.blit(self.skyImage,(WIDTH-self.skyOffSet,0))
+>>>>>>> bfac7102f308fb143210f4ac2fd8d45208f7aaf0
         pg.draw.rect(self.screen, FLOOR_COLOR, (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT))
 
     def renderGameSprites(self, color=None):
@@ -27,7 +40,7 @@ class SpriteRenderer:
             color = ((255 / (1 + depth ** 5 * 0.00002)),) * 3  # Default color is white
             wallColumn.fill(color, special_flags=pg.BLEND_MULT)
             self.screen.blit(wallColumn, wallPos)
-
+            
     @staticmethod
     def getTexture(path, res=(TEXTURE_WIDTH, TEXTURE_WIDTH)):
         texture = pg.image.load(path).convert_alpha()
