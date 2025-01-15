@@ -7,8 +7,7 @@ class Player:
         self.game = game
         self.x, self.y = PLAYER_POS
         self.angle = PLAYER_ANGLE
-        self.angleDelta = 0 
-
+        self.rel = 0
     def update(self):
         self.movement()
         self.checkWall(self.x, self.y)
@@ -19,17 +18,12 @@ class Player:
     def movement(self):
         sinA = math.sin(self.angle)
         cosA = math.cos(self.angle)
-        dx, dy = 0, 0
+        dx, dy = 0, 0   #diferencia x
         speed = PLAYER_SPEED * self.game.delta_time
         speedSin = speed * sinA
         speedCos = speed * cosA
 
         key = pg.key.get_pressed()
-
-        # Inicializa el cambio en el ángulo en cero
-        self.angleDelta = 0
-        
-        # Movimiento adelante y atrás
         if key[pg.K_w]:
             dx += speedCos
             dy += speedSin
@@ -45,14 +39,14 @@ class Player:
         
         self.checkWallCollision(dx, dy)
         
+        prev_angle = self.angle
         if key[pg.K_LEFT]:
-            self.angleDelta = -PLAYER_ROT_SPEED * self.game.delta_time
+            self.angle -= PLAYER_ROT_SPEED * self.game.delta_time
         if key[pg.K_RIGHT]:
             self.angle += PLAYER_ROT_SPEED * self.game.delta_time
-            self.angle %= math.tau
+        self.angle %= math.tau
+        self.rel = self.angle - prev_angle
 
-        # Detectar colisiones con paredes
-        self.checkWallCollision(dx, dy)
     def checkWall(self, x, y):
         return (x, y) not in self.game.map.worldMap  # chequea si las coordenadas están en las paredes
 
