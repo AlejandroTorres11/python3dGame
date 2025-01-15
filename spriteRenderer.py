@@ -16,7 +16,7 @@ class SpriteRenderer:
         self.skyOffSet=(self.skyOffSet+0.5 *self.game.player.angle)%HALF_WIDTH
         self.screen.blit(self.skyImage,(-self.skyOffSet,0))
         self.screen.blit(self.skyImage,(-self.skyOffSet+WIDTH,0))
-
+        pg.draw.rect(self.screen, ROOF_COLOR, (0, 0, WIDTH, HALF_HEIGHT))
         pg.draw.rect(self.screen, FLOOR_COLOR, (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT))
 
     def renderGameSprites(self, color=None):
@@ -35,7 +35,7 @@ class SpriteRenderer:
     
     def loadWallTextures(self):
         return {
-            1: self.getTexture('assets/wall/wall1.png'),
-            2: self.getTexture('assets/wall/wall2.png'),
-            3: self.getTexture('assets/wall/wall3.png'),
+            1: self.getTexture('assets/wall/wall_1.png'),
+            2: self.getTexture('assets/wall/wall_2.png'),
+            3: self.getTexture('assets/wall/wall_3.png'),
         }

@@ -36,4 +36,6 @@ TEXTURE_WIDTH = 256
 HALF_TEXTURE_WIDTH = TEXTURE_WIDTH // 2
 
 # color del piso
-FLOOR_COLOR = (0, 80, 0)  # verde
+#FLOOR_COLOR = (0, 80, 0)  # verde
+FLOOR_COLOR = (112, 66, 20)  # marron grisaceo
+ROOF_COLOR = (56, 33, 10)  # gris oscuro
