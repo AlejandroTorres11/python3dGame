@@ -4,7 +4,7 @@ from settings import *
 from map import *
 from player import *
 from raycasting import *
-from spriteRenderer import *
+
 class Game:
 
     def __init__(self): #al iniciar un game
@@ -17,7 +17,6 @@ class Game:
     def new_game(self):
         self.player=Player(self)
         self.map=Map(self)
-        self.spriteRenderer=SpriteRenderer(self)
         self.rayCasting= RayCasting(self)
 
     def update(self): #llamado cada frame
@@ -29,12 +28,10 @@ class Game:
         pg.display.set_caption(f'{self.clock.get_fps() :.1f}') #actualiza el nombre de la ventana según los fps actuales
 
     def draw(self): #dibuja la pantalla
-        #self.screen.fill('black')
-        self.spriteRenderer.draw()
-        '''
-        self.player.draw()
-        self.map.draw()
-        '''
+        self.screen.fill('black')
+        #self.player.draw()
+        #self.map.draw()
+
     def checkEvents(self): #chequea si sales de la ventana para cerrar el programa
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type== pg.KEYDOWN and event.key == pg.K_ESCAPE):

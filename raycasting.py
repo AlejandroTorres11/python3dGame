@@ -5,35 +5,17 @@ from settings import *
 class RayCasting:
     def __init__(self,game):
         self.game= game
-        self.rayCastingResult= []
-        self.objectsToRender=[]
-        self.textures= self.game.spriteRenderer.wallTextures
-
-    def getSpritesToRender(self):
-        self.objectsToRender=[]
-        for ray, values in enumerate(self.rayCastingResult):
-            depth, projHeight, texture, offset = values
-            if projHeight < HEIGHT:
-                wallColumn = self.textures[texture].subsurface(offset * (TEXTURE_WIDTH - SCALE), 0, SCALE, TEXTURE_WIDTH)
-                wallColumn = pg.transform.scale(wallColumn, (SCALE, projHeight))
-                wallPos = (ray * SCALE, HALF_HEIGHT - projHeight // 2)
-            else:
-                textureHeight = TEXTURE_WIDTH * HEIGHT / projHeight
-                wallColumn = self.textures[texture].subsurface(offset * (TEXTURE_WIDTH - SCALE), HALF_TEXTURE_WIDTH - textureHeight // 2, SCALE, textureHeight)
-                wallColumn = pg.transform.scale(wallColumn, (SCALE, HEIGHT))
-                wallPos = (ray * SCALE, 0)
-
-            self.objectsToRender.append((depth, wallColumn, wallPos))
-
+    
     def rayCast(self):
-        self.rayCastingResult=[]
-        textureHor,textureVer=1,1
         ox,oy= self.game.player.position
         xMap,yMap= self.game.player.mapPosition
         rayAngle= self.game.player.angle - HALF_FOV +0.0001
+        
         for ray in range(NUM_RAYS):
+            lado=""
             sinA=math.sin(rayAngle)
             cosA=math.cos(rayAngle)
+            wallHeight=1
             #lineas horizontales de la casilla
             if sinA>0: #miramos arriba
                 yHorizontal,dy=(yMap +1,1)
@@ -48,7 +30,10 @@ class RayCasting:
             for i in range(MAX_DEPTH):
                 tileHorizontal=int(xHorizontal),int(yHorizontal)
                 if tileHorizontal in self.game.map.worldMap:
-                    textureHor= self.game.map.worldMap[tileHorizontal]
+                    valor = self.game.map.worldMap[tileHorizontal]  # Accede al valor en esa posición
+                    digitoAltura= str(valor)[1] 
+                    wallHeight= int(digitoAltura)
+                    lado="H"
                     break
                 xHorizontal+=dx
                 yHorizontal+=dy
@@ -68,43 +53,54 @@ class RayCasting:
             for i in range(MAX_DEPTH):
                 tileVertical= int(xVertical),int(yVertical)
                 if tileVertical in self.game.map.worldMap:
-                    textureVer= self.game.map.worldMap[tileVertical]
+                    valor = self.game.map.worldMap[tileVertical]  # Accede al valor en esa posición
+                    digitoAltura= str(valor)[1] 
+                    wallHeight= int(digitoAltura)
+                    lado="V"
                     break
                 xVertical+=dx
                 yVertical+=dy       
                 depthVertical+= deltaDepth
             
-            #depth, distancia al muro
-            if(depthHorizontal>depthVertical):
-                depth,texture=depthVertical, textureVer
-                yVertical%=1
-                offset= yVertical if cosA>0 else 1-yVertical
+            #depth
+            if abs(depthHorizontal - depthVertical) < 0.0001:
+                depth = depthVertical
+                lado = "V"
+            elif depthHorizontal > depthVertical:
+                depth = depthVertical
+                lado = "V"
             else:
-                depth, texture=depthHorizontal, textureHor
-                xHorizontal%=1
-                offset= xHorizontal if sinA<0 else (1-xHorizontal)
+                depth = depthHorizontal
+                lado = "H"
 
-            #quitar efecto de ojo de pez
-            depth*=math.cos(self.game.player.angle - rayAngle) #cuanto mas se aleja el rayo del centro, menor es el coseno de la diferencia 
-                                                                #y menor el depth para compensar
+            #remove fishbowl effect
+            depth*=math.cos(self.game.player.angle - rayAngle)
 
-            #projeccion
-            projHeight= SCREEN_DIST/ (depth + 0.0001) #altura de la proyeccion de la pared
+            offset=0
+            for i in range(0, wallHeight):
+                # Calcula la altura de la proyección
+                proj_height = SCREEN_DIST / (depth + 0.0001)
+                # Dibuja las paredes
+                color_intensity = 255 / (1 + depth ** 5 * 0.00002)
+                if lado == "H":
+                    color = [0, color_intensity * 0.5, 0]  # Verde oscuro para H (mitad de intensidad)
+                elif lado == "V":
+                    color = [0, color_intensity, 0]# Verde claro para V (intensidad completa)
+                if i == 1:
+                    if lado == "H":
+                        color = [color_intensity * 0.5, 0, 0]  # Rojo oscuro para H
+                    elif lado == "V":
+                        color = [color_intensity, 0, 0]  # Rojo claro para 
 
-            #resultado raycasting
-            self.rayCastingResult.append((depth,projHeight,texture,offset))
-            #dibujar paredes blancas
-            ''' 
-            color=((255/(1+depth **5 * 0.00002)),) * 3
-            pg.draw.rect(self.game.screen, color,
-                        (ray*SCALE,HALF_HEIGHT - projHeight//2, SCALE, projHeight))
+                pg.draw.rect(self.game.screen, color,
+                            (ray*SCALE,HALF_HEIGHT - proj_height//2 - offset, SCALE, proj_height))                
+                offset += proj_height
+            
+            #minimap
             '''
-            '''
-            #minimapa
             pg.draw.line(self.game.screen,'yellow',(ox*100,oy*100), (100*ox+100*depth*cosA,100*oy +100*depth*sinA),2)
 
             '''
             rayAngle+=DELTA_ANGLE
     def update(self):
         self.rayCast()
-        self.getSpritesToRender()

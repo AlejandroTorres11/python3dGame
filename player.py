@@ -7,7 +7,7 @@ class Player:
         self.game = game
         self.x, self.y = PLAYER_POS
         self.angle = PLAYER_ANGLE
-        self.rel = 0
+
     def update(self):
         self.movement()
         self.checkWall(self.x, self.y)
@@ -39,22 +39,19 @@ class Player:
         
         self.checkWallCollision(dx, dy)
         
-        prev_angle = self.angle
         if key[pg.K_LEFT]:
             self.angle -= PLAYER_ROT_SPEED * self.game.delta_time
         if key[pg.K_RIGHT]:
             self.angle += PLAYER_ROT_SPEED * self.game.delta_time
-        self.angle %= math.tau
-        self.rel = self.angle - prev_angle
+            self.angle %= math.tau
 
     def checkWall(self, x, y):
         return (x, y) not in self.game.map.worldMap  # chequea si las coordenadas están en las paredes
 
     def checkWallCollision(self, dx, dy):
-        scale=PLAYER_SIZE_SCALE/self.game.delta_time
-        if self.checkWall(int(self.x + dx * scale), int(self.y)):  # se anticipa al movimiento en x
+        if self.checkWall(int(self.x + dx), int(self.y)):  # se anticipa al movimiento en x
             self.x += dx
-        if self.checkWall(int(self.x), int(self.y + dy* scale)):  # se anticipa al movimiento en y
+        if self.checkWall(int(self.x), int(self.y + dy)):  # se anticipa al movimiento en y
             self.y += dy
 
     @property
