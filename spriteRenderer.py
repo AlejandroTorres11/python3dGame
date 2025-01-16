@@ -19,7 +19,7 @@ class SpriteRenderer:
         self.skyOffSet=(self.skyOffSet+0.4 *self.game.player.angle)%WIDTH
         self.screen.blit(self.skyImage,(-self.skyOffSet,0))
         self.screen.blit(self.skyImage,(WIDTH-self.skyOffSet,0))
-
+        pg.draw.rect(self.screen, ROOF_COLOR, (0, 0, WIDTH, HALF_HEIGHT))
         pg.draw.rect(self.screen, FLOOR_COLOR, (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT))
 
     def renderGameSprites(self, color=None):
