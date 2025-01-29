@@ -14,16 +14,16 @@ class RayCasting:
         for ray, values in enumerate(self.rayCastingResult):
             depth, projHeight, texture, offset = values
             if projHeight < HEIGHT:
-                wallColumn = self.textures[texture].subsurface(offset * (TEXTURE_WIDTH - SCALE), 0, SCALE, TEXTURE_WIDTH)
-                wallColumn = pg.transform.scale(wallColumn, (SCALE, projHeight))
+                wallSlice = self.textures[texture].subsurface(offset * (TEXTURE_WIDTH - SCALE), 0, SCALE, TEXTURE_WIDTH)
+                wallSlice = pg.transform.scale(wallSlice, (SCALE, projHeight))
                 wallPos = (ray * SCALE, HALF_HEIGHT - projHeight // 2)
             else:
                 textureHeight = TEXTURE_WIDTH * HEIGHT / projHeight
-                wallColumn = self.textures[texture].subsurface(offset * (TEXTURE_WIDTH - SCALE), HALF_TEXTURE_WIDTH - textureHeight // 2, SCALE, textureHeight)
-                wallColumn = pg.transform.scale(wallColumn, (SCALE, HEIGHT))
+                wallSlice = self.textures[texture].subsurface(offset * (TEXTURE_WIDTH - SCALE), HALF_TEXTURE_WIDTH - textureHeight // 2, SCALE, textureHeight)
+                wallSlice = pg.transform.scale(wallSlice, (SCALE, HEIGHT))
                 wallPos = (ray * SCALE, 0)
 
-            self.objectsToRender.append((depth, wallColumn, wallPos))
+            self.objectsToRender.append((depth, wallSlice, wallPos))
 
     def rayCast(self):
         self.rayCastingResult=[]
@@ -99,12 +99,11 @@ class RayCasting:
             pg.draw.rect(self.game.screen, color,
                         (ray*SCALE,HALF_HEIGHT - projHeight//2, SCALE, projHeight))
             '''
-            '''
             #minimapa
             pg.draw.line(self.game.screen,'yellow',(ox*100,oy*100), (100*ox+100*depth*cosA,100*oy +100*depth*sinA),2)
 
-            '''
             rayAngle+=DELTA_ANGLE
+            
     def update(self):
         self.rayCast()
         self.getSpritesToRender()

@@ -7,11 +7,13 @@ class Player:
         self.game = game
         self.x, self.y = PLAYER_POS
         self.angle = PLAYER_ANGLE
-        self.rel = 0
+        self.prevAngle=0;
+        self.angleDiff = 0
     def update(self):
         self.movement()
         self.checkWall(self.x, self.y)
-
+        #print(self.angle)
+        print(self.angleDiff)
     def draw(self):
         pg.draw.circle(self.game.screen, 'green', (int(self.x * 100), int(self.y * 100)), 15)
     
@@ -39,13 +41,20 @@ class Player:
         
         self.checkWallCollision(dx, dy)
         
-        prev_angle = self.angle
+        self.prevAngle = self.angle
         if key[pg.K_LEFT]:
             self.angle -= PLAYER_ROT_SPEED * self.game.delta_time
         if key[pg.K_RIGHT]:
             self.angle += PLAYER_ROT_SPEED * self.game.delta_time
-        self.angle %= math.tau
-        self.rel = self.angle - prev_angle
+        
+        
+        # diferencia ajustada
+        self.angleDiff = self.angle - self.prevAngle
+        if self.angleDiff > math.pi:
+            self.angleDiff -= 2 * math.pi
+        elif self.angleDiff < -math.pi:
+            self.angleDiff += 2 * math.pi
+            
 
     def checkWall(self, x, y):
         return (x, y) not in self.game.map.worldMap  # chequea si las coordenadas están en las paredes

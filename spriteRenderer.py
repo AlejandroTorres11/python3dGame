@@ -16,20 +16,20 @@ class SpriteRenderer:
         self.renderGameSprites()
 
     def drawBackground(self):
-        self.skyOffSet=(self.skyOffSet+0.4 *self.game.player.angle)%WIDTH
+        self.skyOffSet=(self.skyOffSet+400 *self.game.player.angleDiff)%WIDTH
         self.screen.blit(self.skyImage,(-self.skyOffSet,0))
         self.screen.blit(self.skyImage,(WIDTH-self.skyOffSet,0))
-        pg.draw.rect(self.screen, ROOF_COLOR, (0, 0, WIDTH, HALF_HEIGHT))
+        #pg.draw.rect(self.screen, ROOF_COLOR, (0, 0, WIDTH, HALF_HEIGHT))
         pg.draw.rect(self.screen, FLOOR_COLOR, (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT))
 
     def renderGameSprites(self, color=None):
         # Use self.game instead of passing 'game' as a parameter
         self.color = color if color else (255, 255, 255)
         for sprite in self.game.rayCasting.objectsToRender:
-            depth, wallColumn, wallPos = sprite
+            depth, spriteSlice, spritePos = sprite
             color = ((255 / (1 + depth ** 5 * 0.00002)),) * 3  # Default color is white
-            wallColumn.fill(color, special_flags=pg.BLEND_MULT)
-            self.screen.blit(wallColumn, wallPos)
+            spriteSlice.fill(color, special_flags=pg.BLEND_MULT)
+            self.screen.blit(spriteSlice, spritePos)
             
     @staticmethod
     def getTexture(path, res=(TEXTURE_WIDTH, TEXTURE_WIDTH)):
