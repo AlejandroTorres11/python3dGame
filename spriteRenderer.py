@@ -23,9 +23,9 @@ class SpriteRenderer:
         pg.draw.rect(self.screen, FLOOR_COLOR, (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT))
 
     def renderGameSprites(self, color=None):
-        # Use self.game instead of passing 'game' as a parameter
+        listaSprites = sorted(self.game.rayCasting.objectsToRender,key=lambda x:x[0],reverse=True)#segun depth
         self.color = color if color else (255, 255, 255)
-        for sprite in self.game.rayCasting.objectsToRender:
+        for sprite in listaSprites:
             depth, spriteSlice, spritePos = sprite
             color = ((255 / (1 + depth ** 5 * 0.00002)),) * 3  # Default color is white
             spriteSlice.fill(color, special_flags=pg.BLEND_MULT)

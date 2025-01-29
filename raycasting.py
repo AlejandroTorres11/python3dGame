@@ -100,7 +100,7 @@ class RayCasting:
                         (ray*SCALE,HALF_HEIGHT - projHeight//2, SCALE, projHeight))
             '''
             #minimapa
-            pg.draw.line(self.game.screen,'yellow',(ox*100,oy*100), (100*ox+100*depth*cosA,100*oy +100*depth*sinA),2)
+            #pg.draw.line(self.game.screen,'yellow',(ox*100,oy*100), (100*ox+100*depth*cosA,100*oy +100*depth*sinA),2)
 
             rayAngle+=DELTA_ANGLE
             

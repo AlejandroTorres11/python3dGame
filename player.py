@@ -13,7 +13,8 @@ class Player:
         self.movement()
         self.checkWall(self.x, self.y)
         #print(self.angle)
-        print(self.angleDiff)
+        #print(self.angleDiff)
+        #print(self.x,self.y)
     def draw(self):
         pg.draw.circle(self.game.screen, 'green', (int(self.x * 100), int(self.y * 100)), 15)
     

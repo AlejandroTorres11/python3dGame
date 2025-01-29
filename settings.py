@@ -3,7 +3,7 @@ import math
 # opciones generales
 
 # pantalla
-RES = WIDTH, HEIGHT = 1280, 720
+RES = WIDTH, HEIGHT = 1280 , 720
 HALF_WIDTH = WIDTH // 2
 HALF_HEIGHT = HEIGHT // 2
 
